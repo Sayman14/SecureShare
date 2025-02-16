@@ -4,8 +4,7 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Copy, Clock } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+import { Eye, EyeOff, Copy, Clock, Shield } from "lucide-react";
 
 export default function View({ params }: { params: { shareId: string } }) {
   const [accessKey, setAccessKey] = useState("");
@@ -33,21 +32,33 @@ export default function View({ params }: { params: { shareId: string } }) {
 
   if (isLoading) {
     return (
-      <Card className="max-w-md mx-auto">
-        <CardContent className="p-6">
-          <div className="h-20 animate-pulse bg-muted rounded" />
-        </CardContent>
-      </Card>
+      <div className="max-w-md mx-auto">
+        <Card>
+          <CardContent className="p-6">
+            <div className="space-y-4">
+              <div className="h-8 bg-muted animate-pulse rounded" />
+              <div className="h-10 bg-muted animate-pulse rounded" />
+              <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   if (error) {
     const message = error instanceof Error ? error.message : "Failed to load password";
     return (
-      <Card className="max-w-md mx-auto">
-        <CardContent className="p-6">
-          <div className="text-center">
-            <p className="text-destructive mb-4">{message}</p>
+      <div className="max-w-md mx-auto">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2 text-destructive">
+              <Shield className="h-5 w-5" />
+              <h2 className="text-lg font-semibold">Access Denied</h2>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">{message}</p>
             {message.includes("401") && (
               <div className="space-y-4">
                 <Input
@@ -61,48 +72,62 @@ export default function View({ params }: { params: { shareId: string } }) {
                 </Button>
               </div>
             )}
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="max-w-md mx-auto">
-      <CardHeader>
-        <h1 className="text-2xl font-bold">{data.title}</h1>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="relative">
-          <Input
-            type={showPassword ? "text" : "password"}
-            value={data.password}
-            readOnly
-          />
-          <button
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-10 top-2.5 text-muted-foreground hover:text-foreground"
-          >
-            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-          </button>
-          <button
-            onClick={copyToClipboard}
-            className="absolute right-2 top-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <Copy className="h-5 w-5" />
-          </button>
-        </div>
+    <div className="max-w-md mx-auto">
+      <Card className="overflow-hidden">
+        <CardHeader className="bg-primary/5 border-b">
+          <h1 className="text-xl font-semibold">{data.title}</h1>
+        </CardHeader>
+        <CardContent className="p-6 space-y-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Password</label>
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                value={data.password}
+                readOnly
+                className="pr-20"
+              />
+              <div className="absolute right-0 top-0 h-full flex items-center gap-1 pr-2">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8"
+                  onClick={copyToClipboard}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
 
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Eye className="h-4 w-4" />
-          <span>{data.remainingViews} views remaining</span>
-        </div>
+          <div className="grid grid-cols-2 gap-4 pt-4 border-t">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Eye className="h-4 w-4 text-primary" />
+              <span>{data.remainingViews} {data.remainingViews === 1 ? 'view' : 'views'} remaining</span>
+            </div>
 
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Clock className="h-4 w-4" />
-          <span>Expires {formatDistanceToNow(new Date(data.expiresAt))} from now</span>
-        </div>
-      </CardContent>
-    </Card>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Clock className="h-4 w-4 text-primary" />
+              <span>Expires in {Math.ceil((new Date(data.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60))} hours</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

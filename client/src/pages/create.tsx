@@ -1,8 +1,7 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertPasswordSchema } from "@shared/schema";
 import { useMutation } from "@tanstack/react-query";
-import { useLocation } from "wouter";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -16,6 +15,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Copy, Check } from "lucide-react";
 import { z } from "zod";
 
 const schema = z.object({
@@ -29,7 +30,8 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function Create() {
-  const [, navigate] = useLocation();
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -49,13 +51,13 @@ export default function Create() {
       return res.json();
     },
     onSuccess: (data) => {
-      const shareUrl = `${window.location.origin}/view/${data.shareId}`;
-      navigator.clipboard.writeText(shareUrl);
+      const url = `${window.location.origin}/view/${data.shareId}`;
+      setShareUrl(url);
+      navigator.clipboard.writeText(url);
       toast({
         title: "Password created!",
         description: "Share link copied to clipboard",
       });
-      navigate("/");
     },
     onError: () => {
       toast({
@@ -65,6 +67,14 @@ export default function Create() {
       });
     },
   });
+
+  const copyToClipboard = () => {
+    if (shareUrl) {
+      navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   return (
     <div className="max-w-md mx-auto">
@@ -162,6 +172,28 @@ export default function Create() {
           </Form>
         </CardContent>
       </Card>
+
+      <Dialog open={!!shareUrl} onOpenChange={() => setShareUrl(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Password Created Successfully!</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">Share this link with the recipient:</p>
+            <div className="relative">
+              <Input value={shareUrl || ''} readOnly />
+              <Button
+                size="icon"
+                variant="ghost"
+                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                onClick={copyToClipboard}
+              >
+                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

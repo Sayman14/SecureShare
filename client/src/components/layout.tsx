@@ -24,11 +24,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <span className="font-semibold">SecureShare</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex gap-4 text-sm text-muted-foreground">
-            <NavLinks />
-          </nav>
-
           {/* Mobile Navigation */}
           <Sheet>
             <SheetTrigger asChild className="md:hidden">
@@ -50,8 +45,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </main>
 
       <footer className="mt-auto border-t bg-white py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>© 2024 SecureShare. All rights reserved.</p>
+        <div className="container mx-auto px-4 text-center">
+          <nav className="flex justify-center gap-6 mb-4 text-sm text-muted-foreground">
+            <NavLinks />
+          </nav>
+          <p className="text-sm text-muted-foreground">© 2024 SecureShare. All rights reserved.</p>
         </div>
       </footer>
     </div>
