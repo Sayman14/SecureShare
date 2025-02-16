@@ -23,24 +23,38 @@ const schema = insertPasswordSchema.extend({
   maxViews: insertPasswordSchema.shape.maxViews.min(1).max(100),
 });
 
+type FormValues = {
+  title: string;
+  password: string;
+  maxViews: string;
+  expiryHours: string;
+  accessKey: string;
+};
+
 export default function Create() {
   const [, navigate] = useLocation();
   const { toast } = useToast();
-  
-  const form = useForm({
+
+  const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       title: "",
       password: "",
-      maxViews: 1,
-      expiryHours: 24,
+      maxViews: "1",
+      expiryHours: "24",
       accessKey: "",
     },
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: typeof schema._type) => {
-      const res = await apiRequest("POST", "/api/passwords", data);
+    mutationFn: async (data: FormValues) => {
+      // Convert string values to numbers before sending to API
+      const payload = {
+        ...data,
+        maxViews: parseInt(data.maxViews, 10),
+        expiryHours: parseInt(data.expiryHours, 10),
+      };
+      const res = await apiRequest("POST", "/api/passwords", payload);
       return res.json();
     },
     onSuccess: (data) => {
@@ -105,7 +119,13 @@ export default function Create() {
                   <FormItem>
                     <FormLabel>Maximum Views</FormLabel>
                     <FormControl>
-                      <Input type="number" min={1} max={100} {...field} />
+                      <Input 
+                        type="number" 
+                        min={1} 
+                        max={100} 
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -119,7 +139,13 @@ export default function Create() {
                   <FormItem>
                     <FormLabel>Expiry (hours)</FormLabel>
                     <FormControl>
-                      <Input type="number" min={1} max={168} {...field} />
+                      <Input 
+                        type="number" 
+                        min={1} 
+                        max={168} 
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
