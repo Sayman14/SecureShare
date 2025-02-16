@@ -19,7 +19,10 @@ A privacy-first, self-destructing password-sharing service.
 1. **Enter a password** you want to share.  
 2. **Set an expiry time** (up to 7 days) and optional view limit.  
 3. **Generate a secure link** to share with others.  
-4. **Once the limit is reached or time expires**, the password is permanently deleted.  
+4. **Once the limit is reached or time expires**, the password is permanently deleted.
+
+# SecureShare  
+![SecureShare Screenshot](images/67b1b103305d68103204d63c.jpg)
 
 ---
 
