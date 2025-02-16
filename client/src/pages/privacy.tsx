@@ -25,11 +25,11 @@ export default function Privacy() {
             We implement several security measures to protect your shared passwords:
           </p>
           <ul>
-            <li>All passwords are encrypted using AES-256 encryption before storage</li>
+            <li>All passwords are encrypted on the client-side using AES-256 encryption before transmission and stored in encrypted form on our servers</li>
             <li>Passwords are only stored in memory and never written to disk</li>
-            <li>Access keys are hashed before comparison</li>
-            <li>No logs or analytics data is collected</li>
-            <li>No cookies or tracking mechanisms are used</li>
+            <li>Access keys are irreversibly hashed using a secure cryptographic algorithm and never stored in their original form</li>
+            <li>We do not log IP addresses, access times, or viewing history</li>
+            <li>No cookies, tracking mechanisms, or analytics are used</li>
           </ul>
 
           <h2>Data Retention</h2>
@@ -40,7 +40,8 @@ export default function Privacy() {
             <li>Passwords are automatically deleted after their expiration time (maximum 7 days)</li>
             <li>Passwords are removed once the maximum view count is reached</li>
             <li>Our cleanup process runs every 5 minutes to ensure expired data is removed</li>
-            <li>We do not maintain backups of shared passwords</li>
+            <li>If for any reason an expired password is not deleted immediately, it will be removed automatically in the next cleanup cycle</li>
+            <li>Once a password is deleted or expired, it is permanently erased from our system with no way to recover it</li>
           </ul>
 
           <h2>No User Accounts</h2>
@@ -50,7 +51,9 @@ export default function Privacy() {
           <ul>
             <li>No personal information is ever collected</li>
             <li>No email addresses are stored</li>
-            <li>No user tracking or profiling</li>
+            <li>No sessions, cookies, or persistent identifiers are used</li>
+            <li>Each password share is completely independent</li>
+            <li>Once a password is deleted, it leaves no trace on our system</li>
           </ul>
 
           <h2>Third-Party Services</h2>
