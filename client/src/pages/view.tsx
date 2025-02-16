@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Copy, Clock, Shield, Key } from "lucide-react";
+import { Eye, EyeOff, Copy, Clock, Shield, Key, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useLocation } from "wouter";
 
 export default function View({ params }: { params: { shareId: string } }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,6 +14,7 @@ export default function View({ params }: { params: { shareId: string } }) {
   const [accessKey, setAccessKey] = useState("");
   const [showAccessKeyDialog, setShowAccessKeyDialog] = useState(false);
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["/api/passwords", params.shareId, accessKey],
@@ -29,6 +31,32 @@ export default function View({ params }: { params: { shareId: string } }) {
       return res.json();
     },
     retry: false,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`/api/passwords/${params.shareId}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        throw new Error('Failed to delete password');
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Password deleted",
+        description: "The password has been permanently deleted",
+      });
+      setLocation('/');
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete password",
+      });
+    },
   });
 
   const copyToClipboard = () => {
@@ -122,6 +150,15 @@ export default function View({ params }: { params: { shareId: string } }) {
                 </div>
               </div>
 
+              {data.notes && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Notes</label>
+                  <div className="p-3 bg-muted rounded-md text-sm">
+                    {data.notes}
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-4 pt-4 border-t">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Eye className="h-4 w-4 text-primary" />
@@ -133,6 +170,16 @@ export default function View({ params }: { params: { shareId: string } }) {
                   <span>Expires in {Math.ceil((new Date(data.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60))} hours</span>
                 </div>
               </div>
+
+              <Button 
+                variant="destructive" 
+                className="w-full" 
+                onClick={() => deleteMutation.mutate()}
+                disabled={deleteMutation.isPending}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                {deleteMutation.isPending ? "Deleting..." : "Delete Password"}
+              </Button>
             </CardContent>
           </>
         )}

@@ -9,6 +9,7 @@ export interface IStorage {
   getPassword(shareId: string): Promise<Password | undefined>;
   decrementViews(shareId: string): Promise<void>;
   cleanExpired(): Promise<void>;
+  deletePassword(shareId: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -38,6 +39,7 @@ export class MemStorage implements IStorage {
       remainingViews: data.maxViews,
       expiresAt,
       accessKey: data.accessKey || null,
+      notes: data.notes || null,
       createdAt: new Date()
     };
 
@@ -48,12 +50,12 @@ export class MemStorage implements IStorage {
   async getPassword(shareId: string): Promise<Password | undefined> {
     const password = this.passwords.get(shareId);
     if (!password) return undefined;
-    
+
     if (password.expiresAt < new Date() || password.remainingViews <= 0) {
       this.passwords.delete(shareId);
       return undefined;
     }
-    
+
     return password;
   }
 
@@ -67,6 +69,14 @@ export class MemStorage implements IStorage {
         this.passwords.set(shareId, password);
       }
     }
+  }
+
+  async deletePassword(shareId: string): Promise<boolean> {
+    if (this.passwords.has(shareId)) {
+      this.passwords.delete(shareId);
+      return true;
+    }
+    return false;
   }
 
   async cleanExpired(): Promise<void> {

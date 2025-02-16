@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Copy, Check, RefreshCw, Eye, EyeOff } from "lucide-react";
@@ -34,6 +35,7 @@ export default function Create() {
       maxViews: "1",
       expiryHours: "24",
       accessKey: "",
+      notes: "",
     },
   });
 
@@ -187,7 +189,23 @@ export default function Create() {
                   </FormItem>
                 )}
               />
-
+              <FormField
+                control={form.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Notes (Optional)</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Add any additional information or context"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <Button type="submit" className="w-full" disabled={mutation.isPending}>
                 {mutation.isPending ? "Creating..." : "Create Password"}
               </Button>
@@ -227,6 +245,7 @@ const schema = z.object({
   maxViews: z.string().transform((val) => parseInt(val, 10)),
   expiryHours: z.string().transform((val) => parseInt(val, 10)),
   accessKey: z.string().optional(),
+  notes: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof schema>;

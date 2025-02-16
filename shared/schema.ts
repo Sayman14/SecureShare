@@ -11,6 +11,7 @@ export const passwords = pgTable("passwords", {
   remainingViews: integer("remaining_views").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   accessKey: text("access_key"),
+  notes: text("notes"),
   shareId: text("share_id").notNull().unique(),
   createdAt: timestamp("created_at").defaultNow().notNull()
 });
@@ -21,6 +22,7 @@ export const insertPasswordSchema = createInsertSchema(passwords)
     password: true,
     maxViews: true,
     accessKey: true,
+    notes: true,
   })
   .extend({
     expiryHours: z.number().min(1).max(168)

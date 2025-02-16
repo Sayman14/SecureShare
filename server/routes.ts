@@ -24,7 +24,7 @@ export async function registerRoutes(app: Express) {
     const { key } = req.query;
 
     const password = await storage.getPassword(shareId);
-    
+
     if (!password) {
       return res.status(404).json({ message: "Password not found or expired" });
     }
@@ -34,13 +34,24 @@ export async function registerRoutes(app: Express) {
     }
 
     await storage.decrementViews(shareId);
-    
+
     res.json({
       title: password.title,
       password: password.password,
+      notes: password.notes,
       remainingViews: password.remainingViews - 1,
       expiresAt: password.expiresAt
     });
+  });
+
+  app.delete("/api/passwords/:shareId", async (req, res) => {
+    const { shareId } = req.params;
+    const success = await storage.deletePassword(shareId);
+    if (success) {
+      res.json({ message: "Password deleted successfully" });
+    } else {
+      res.status(404).json({ message: "Password not found" });
+    }
   });
 
   return createServer(app);
