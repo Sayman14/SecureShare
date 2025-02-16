@@ -10,9 +10,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Shield className="h-6 w-6" />
             <span className="font-semibold">SecureShare</span>
           </Link>
-          
+
           <nav className="flex gap-4 text-sm text-muted-foreground">
             <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/terms">Terms & Conditions</Link>
           </nav>
         </div>
       </header>

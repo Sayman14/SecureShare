@@ -7,6 +7,7 @@ import Home from "@/pages/home";
 import Create from "@/pages/create";
 import View from "@/pages/view";
 import Privacy from "@/pages/privacy";
+import Terms from "@/pages/terms";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -17,6 +18,7 @@ function Router() {
         <Route path="/create" component={Create} />
         <Route path="/view/:shareId" component={View} />
         <Route path="/privacy" component={Privacy} />
+        <Route path="/terms" component={Terms} />
         <Route component={NotFound} />
       </Switch>
     </Layout>
