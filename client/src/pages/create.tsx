@@ -16,7 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, RefreshCw } from "lucide-react";
+import { PasswordStrengthMeter } from "@/components/password-strength-meter";
+import { generatePassword } from "@/lib/generate-password";
 import { z } from "zod";
 
 const schema = z.object({
@@ -76,6 +78,11 @@ export default function Create() {
     }
   };
 
+  const generateNewPassword = () => {
+    const newPassword = generatePassword();
+    form.setValue("password", newPassword);
+  };
+
   return (
     <div className="max-w-md mx-auto">
       <Card>
@@ -105,9 +112,23 @@ export default function Create() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
+                    <div className="space-y-2">
+                      <div className="relative">
+                        <FormControl>
+                          <Input type="password" {...field} />
+                        </FormControl>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-2 top-1/2 -translate-y-1/2"
+                          onClick={generateNewPassword}
+                        >
+                          <RefreshCw className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <PasswordStrengthMeter password={field.value} />
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
