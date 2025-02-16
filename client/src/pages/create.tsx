@@ -16,20 +16,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { z } from "zod";
 
-const schema = insertPasswordSchema.extend({
-  password: insertPasswordSchema.shape.password.min(1, "Password is required"),
-  title: insertPasswordSchema.shape.title.min(1, "Title is required"),
-  maxViews: insertPasswordSchema.shape.maxViews.min(1).max(100),
+const schema = z.object({
+  title: z.string().min(1, "Title is required"),
+  password: z.string().min(1, "Password is required"),
+  maxViews: z.string().transform((val) => parseInt(val, 10)),
+  expiryHours: z.string().transform((val) => parseInt(val, 10)),
+  accessKey: z.string().optional(),
 });
 
-type FormValues = {
-  title: string;
-  password: string;
-  maxViews: string;
-  expiryHours: string;
-  accessKey: string;
-};
+type FormValues = z.infer<typeof schema>;
 
 export default function Create() {
   const [, navigate] = useLocation();
@@ -48,13 +45,7 @@ export default function Create() {
 
   const mutation = useMutation({
     mutationFn: async (data: FormValues) => {
-      // Convert string values to numbers before sending to API
-      const payload = {
-        ...data,
-        maxViews: parseInt(data.maxViews, 10),
-        expiryHours: parseInt(data.expiryHours, 10),
-      };
-      const res = await apiRequest("POST", "/api/passwords", payload);
+      const res = await apiRequest("POST", "/api/passwords", data);
       return res.json();
     },
     onSuccess: (data) => {
@@ -124,7 +115,6 @@ export default function Create() {
                         min={1} 
                         max={100} 
                         {...field}
-                        onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -144,7 +134,6 @@ export default function Create() {
                         min={1} 
                         max={168} 
                         {...field}
-                        onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
                     <FormMessage />
