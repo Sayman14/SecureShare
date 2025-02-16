@@ -45,10 +45,28 @@ export default function Terms() {
             <li>Maximum password storage time is 7 days</li>
             <li>Maximum 100 views per shared password</li>
             <li>Service availability is not guaranteed</li>
-            <li>Data may be deleted earlier than specified for security reasons</li>
+            <li>Data may be deleted earlier than specified in the following circumstances:
+              <ul>
+                <li>Detection of suspicious activity or automated access attempts</li>
+                <li>Violations of our terms of service</li>
+                <li>System maintenance or technical issues</li>
+                <li>Legal compliance requirements</li>
+              </ul>
+            </li>
           </ul>
 
-          <h2>5. Security Responsibilities</h2>
+          <h2>5. Data Handling Transparency</h2>
+          <p>
+            We implement AES-256 encryption to protect your shared passwords. Please note:
+          </p>
+          <ul>
+            <li>All passwords are encrypted before storage using AES-256</li>
+            <li>There is no password recovery option - if you lose the share link or access key, the data cannot be retrieved</li>
+            <li>Encryption keys are never stored alongside the encrypted data</li>
+            <li>We do not log or track decryption attempts</li>
+          </ul>
+
+          <h2>6. Security Responsibilities</h2>
           <p>
             While we implement strong security measures, you are responsible for:
           </p>
@@ -68,8 +86,15 @@ export default function Terms() {
           <h2>7. Limitation of Liability</h2>
           <p>
             SecureShare shall not be liable for any direct, indirect, incidental, special,
-            or consequential damages resulting from the use or inability to use the service.
+            or consequential damages resulting from:
           </p>
+          <ul>
+            <li>Use or inability to use the service</li>
+            <li>Data loss due to technical failures or system outages</li>
+            <li>Unauthorized access to shared passwords</li>
+            <li>Early deletion of data due to security measures</li>
+            <li>Network or transmission errors</li>
+          </ul>
 
           <h2>8. Changes to Terms</h2>
           <p>
