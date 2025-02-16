@@ -16,26 +16,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Copy, Check, RefreshCw } from "lucide-react";
+import { Copy, Check, RefreshCw, Eye, EyeOff } from "lucide-react";
 import { PasswordStrengthMeter } from "@/components/password-strength-meter";
 import { generatePassword } from "@/lib/generate-password";
 import { z } from "zod";
 
-const schema = z.object({
-  title: z.string().min(1, "Title is required"),
-  password: z.string().min(1, "Password is required"),
-  maxViews: z.string().transform((val) => parseInt(val, 10)),
-  expiryHours: z.string().transform((val) => parseInt(val, 10)),
-  accessKey: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof schema>;
-
 export default function Create() {
+  const [showPassword, setShowPassword] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
-
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -115,17 +105,29 @@ export default function Create() {
                     <div className="space-y-2">
                       <div className="relative">
                         <FormControl>
-                          <Input type="password" {...field} />
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            {...field}
+                          />
                         </FormControl>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-2 top-1/2 -translate-y-1/2"
-                          onClick={generateNewPassword}
-                        >
-                          <RefreshCw className="h-4 w-4" />
-                        </Button>
+                        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={generateNewPassword}
+                          >
+                            <RefreshCw className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                       <PasswordStrengthMeter password={field.value} />
                     </div>
@@ -141,10 +143,10 @@ export default function Create() {
                   <FormItem>
                     <FormLabel>Maximum Views</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="number" 
-                        min={1} 
-                        max={100} 
+                      <Input
+                        type="number"
+                        min={1}
+                        max={100}
                         {...field}
                       />
                     </FormControl>
@@ -160,10 +162,10 @@ export default function Create() {
                   <FormItem>
                     <FormLabel>Expiry (hours)</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="number" 
-                        min={1} 
-                        max={168} 
+                      <Input
+                        type="number"
+                        min={1}
+                        max={168}
                         {...field}
                       />
                     </FormControl>
@@ -202,7 +204,7 @@ export default function Create() {
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">Share this link with the recipient:</p>
             <div className="relative">
-              <Input value={shareUrl || ''} readOnly />
+              <Input value={shareUrl || ""} readOnly />
               <Button
                 size="icon"
                 variant="ghost"
@@ -218,3 +220,13 @@ export default function Create() {
     </div>
   );
 }
+
+const schema = z.object({
+  title: z.string().min(1, "Title is required"),
+  password: z.string().min(1, "Password is required"),
+  maxViews: z.string().transform((val) => parseInt(val, 10)),
+  expiryHours: z.string().transform((val) => parseInt(val, 10)),
+  accessKey: z.string().optional(),
+});
+
+type FormValues = z.infer<typeof schema>;
