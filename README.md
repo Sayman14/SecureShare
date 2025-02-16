@@ -56,7 +56,7 @@ A privacy-first, self-destructing password-sharing service.
    ```  
 4. Open in your browser:  
    ```
-   http://localhost:5173
+   http://localhost:5000
    ```  
 
 ---
@@ -80,15 +80,9 @@ npm run preview  # or yarn preview
 
 You can deploy SecureShare on:  
 
-- **Vercel** (Recommended)  
-- **Netlify**  
-- **Cloudflare Pages**  
-- **Any Static Host (e.g., GitHub Pages, Firebase Hosting)**  
-
-For a **Node.js backend**, deploy using:  
-
 - **Railway.app**  
-- **Render.com**  
+- **Render.com**
+- **Heroku** 
 - **AWS Lambda + API Gateway**  
 
 ---
@@ -105,9 +99,9 @@ For a **Node.js backend**, deploy using:
 
 ## Attribution  
 
-SecureShare is developed and maintained by **[Your Name]**.  
+SecureShare is developed and maintained by **Sanyam**.  
 If you use this project, consider linking back to:  
-🔗 **GitHub Repo:** [https://github.com/yourusername/SecureShare](https://github.com/yourusername/SecureShare)  
+🔗 **GitHub Repo:** (https://github.com/Sanyam4007/SecureShare.git)  
 
 ---
 
@@ -125,4 +119,4 @@ This project is licensed under the **MIT License** – free to use and modify.
 
 ## Contact  
 
-For any questions or security concerns, reach out at **[yourcontact@email.com]**.  
+For any questions or security concerns, reach out at **noddysanyam@gmail.com**.  
