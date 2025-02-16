@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Shield, Clock, Eye, Key } from "lucide-react";
+import { Shield, Clock, Eye, Key, Lock, Trash2, Server } from "lucide-react";
 
 export default function Home() {
   return (
@@ -50,6 +50,64 @@ export default function Home() {
             <p className="text-muted-foreground">
               Optional access key for an additional layer of security.
             </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="mt-12 grid md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <Server className="h-8 w-8 text-[#805AD5] mb-2" />
+            <h3 className="font-semibold">Memory-Only Storage</h3>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>• Passwords are never written to disk</li>
+              <li>• No database or persistent storage</li>
+              <li>• Data is automatically cleared on server restart</li>
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <Lock className="h-8 w-8 text-[#4299E1] mb-2" />
+            <h3 className="font-semibold">End-to-End Security</h3>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>• AES-256 encryption for stored passwords</li>
+              <li>• HTTPS-only access</li>
+              <li>• No tracking or analytics</li>
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <Trash2 className="h-8 w-8 text-[#ED8936] mb-2" />
+            <h3 className="font-semibold">Automatic Cleanup</h3>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>• Expired passwords are removed every 5 minutes</li>
+              <li>• Used passwords are instantly deleted</li>
+              <li>• No data retention</li>
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <Shield className="h-8 w-8 text-[#38B2AC] mb-2" />
+            <h3 className="font-semibold">Privacy First</h3>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>• No registration required</li>
+              <li>• No personal data collection</li>
+              <li>• No cookies or tracking</li>
+            </ul>
           </CardContent>
         </Card>
       </div>

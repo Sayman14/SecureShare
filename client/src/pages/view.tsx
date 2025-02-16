@@ -8,8 +8,9 @@ import { Eye, EyeOff, Copy, Clock, Shield, Key } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export default function View({ params }: { params: { shareId: string } }) {
-  const [accessKey, setAccessKey] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [accessKeyAttempt, setAccessKeyAttempt] = useState("");
+  const [accessKey, setAccessKey] = useState("");
   const [showAccessKeyDialog, setShowAccessKeyDialog] = useState(false);
   const { toast } = useToast();
 
@@ -31,15 +32,18 @@ export default function View({ params }: { params: { shareId: string } }) {
   });
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(data.password);
-    toast({
-      title: "Copied!",
-      description: "Password copied to clipboard",
-    });
+    if (data?.password) {
+      navigator.clipboard.writeText(data.password);
+      toast({
+        title: "Copied!",
+        description: "Password copied to clipboard",
+      });
+    }
   };
 
   const handleAccessKeySubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setAccessKey(accessKeyAttempt);
     setShowAccessKeyDialog(false);
     refetch();
   };
@@ -149,8 +153,8 @@ export default function View({ params }: { params: { shareId: string } }) {
             <Input
               type="text"
               placeholder="Enter access key"
-              value={accessKey}
-              onChange={(e) => setAccessKey(e.target.value)}
+              value={accessKeyAttempt}
+              onChange={(e) => setAccessKeyAttempt(e.target.value)}
               autoFocus
             />
             <Button type="submit" className="w-full">
